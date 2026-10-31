@@ -167,6 +167,18 @@ describe('login throttling', () => {
     assert.equal((await tryPassword(PASSWORD, { ip: '203.0.113.200' })).status, 204);
   });
 
+  test('one address that keeps guessing after its own block cannot pause logins for everyone', async () => {
+    for (let i = 0; i < 80; i++) await tryPassword('errada', { ip: '198.51.100.7' });
+    assert.equal((await tryPassword(PASSWORD, { ip: '203.0.113.200' })).status, 204);
+  });
+
+  test('an address that signed in before is not stopped by the shared limit', async () => {
+    await login(env);
+    for (let i = 0; i < 50; i++) await tryPassword('errada', { ip: `198.51.100.${i}` });
+    assert.equal((await tryPassword(PASSWORD, { ip: '203.0.113.200' })).status, 429);
+    assert.equal((await tryPassword(PASSWORD)).status, 204);
+  });
+
   test('devices already signed in keep working while new logins are paused', async () => {
     const cookie = await login(env);
     for (let i = 0; i < 50; i++) await tryPassword('errada', { ip: `198.51.100.${i}` });

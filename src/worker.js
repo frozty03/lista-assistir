@@ -74,7 +74,7 @@ async function login(request, env) {
   if (wait > 0) return error('too_many_attempts', 429, { 'Retry-After': String(wait) });
 
   if (!(await session.passwordMatches(env, body.password))) return error('wrong_password', 401);
-  await throttle.succeeded(env.DB, ip);
+  await throttle.succeeded(env.DB, ip, now);
   return noContent({ 'Set-Cookie': await session.cookie(env, now) });
 }
 
