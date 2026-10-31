@@ -124,7 +124,7 @@ The API tests run the real worker against an in-memory SQLite database with the 
    npx wrangler secret put SESSION_SECRET   # any long random string
    ```
 
-To use other names, change "Davi & Nico" in `public/index.html` and `public/manifest.webmanifest`.
+To use other names, change in `public/index.html` and `public/manifest.webmanifest`.
 
 ## Credits
 
