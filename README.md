@@ -131,3 +131,7 @@ To use other names, change "Davi & Nico" in `public/index.html` and `public/mani
 - Movie, series and anime data and images come from [TMDB](https://www.themoviedb.org/). This product uses the TMDB API but is not endorsed or certified by TMDB.
 - Star Wars is a trademark of Lucasfilm. This is a personal, non-commercial fan project and is not affiliated with Lucasfilm or Disney. The look is only inspired by the films, and no official artwork is used.
 - Fonts: [Oxanium](https://fonts.google.com/specimen/Oxanium) and [Inter](https://fonts.google.com/specimen/Inter).
+
+## License
+
+[MIT](LICENSE). The license covers this project's code. The posters in the screenshots come from TMDB and belong to their owners.
