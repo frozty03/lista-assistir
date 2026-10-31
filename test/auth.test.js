@@ -144,6 +144,35 @@ describe('login throttling', () => {
     for (let i = 0; i < 9; i++) await tryPassword('errada');
     assert.equal((await tryPassword(PASSWORD)).status, 204);
   });
+
+  test('a burst of simultaneous guesses from one address still only gets 10 tries', async () => {
+    const burst = await Promise.all(Array.from({ length: 30 }, (_, i) => tryPassword(`chute ${i}`)));
+    const statuses = burst.map((res) => res.status);
+    assert.equal(statuses.filter((s) => s === 401).length, 10);
+    assert.equal(statuses.filter((s) => s === 429).length, 20);
+  });
+
+  test('addresses in the same IPv6 /64 network share one limit', async () => {
+    for (let i = 1; i <= 10; i++) await tryPassword('errada', { ip: `2001:db8:1:2::${i}` });
+    assert.equal((await tryPassword(PASSWORD, { ip: '2001:0DB8:0001:0002:0:0:0:abcd' })).status, 429);
+    assert.equal((await tryPassword(PASSWORD, { ip: '2001:db8:1:3::1' })).status, 204);
+  });
+
+  test('wrong passwords spread over many addresses pause new logins for 15 minutes', async () => {
+    for (let i = 0; i < 50; i++) await tryPassword('errada', { ip: `198.51.100.${i}` });
+    const res = await tryPassword(PASSWORD, { ip: '203.0.113.200' });
+    assert.equal(res.status, 429);
+    assert.equal(res.headers.get('Retry-After'), '900');
+    mock.timers.tick(15 * MINUTE);
+    assert.equal((await tryPassword(PASSWORD, { ip: '203.0.113.200' })).status, 204);
+  });
+
+  test('devices already signed in keep working while new logins are paused', async () => {
+    const cookie = await login(env);
+    for (let i = 0; i < 50; i++) await tryPassword('errada', { ip: `198.51.100.${i}` });
+    assert.equal((await tryPassword(PASSWORD, { ip: '203.0.113.200' })).status, 429);
+    assert.equal((await openList(cookie)).status, 200);
+  });
 });
 
 describe('requests from other sites', () => {

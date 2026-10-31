@@ -70,14 +70,11 @@ async function login(request, env) {
 
   const ip = request.headers.get('CF-Connecting-IP') ?? 'unknown';
   const now = Date.now();
-  const wait = await throttle.blockedFor(env.DB, ip, now);
+  const wait = await throttle.attempt(env.DB, ip, now);
   if (wait > 0) return error('too_many_attempts', 429, { 'Retry-After': String(wait) });
 
-  if (!(await session.passwordMatches(env, body.password))) {
-    await throttle.recordFailure(env.DB, ip, now);
-    return error('wrong_password', 401);
-  }
-  await throttle.clearFailures(env.DB, ip);
+  if (!(await session.passwordMatches(env, body.password))) return error('wrong_password', 401);
+  await throttle.succeeded(env.DB, ip);
   return noContent({ 'Set-Cookie': await session.cookie(env, now) });
 }
 

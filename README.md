@@ -64,7 +64,8 @@ flowchart LR
 A few decisions worth knowing about:
 
 - **Two devices, one list, no real-time server.** Every title has a version number. Edits show on screen immediately and are sent one at a time per title, each based on the version the server last confirmed, so two quick taps on **+1 EP** never conflict with each other. If the other device changed the same title first, the server refuses the outdated edit, and the screen shows the newest version instead of overwriting it. Devices reload the list when the site is opened or brought back to the front, and every 30 seconds while it's visible.
-- **Sessions without a sessions table.** The cookie holds an expiry time and an HMAC signature. The signing key mixes a server secret with the password, so changing the password signs every device out. A session lasts a year and renews itself while in use. After ten wrong passwords, that IP address is blocked for up to 15 minutes.
+- **Sessions without a sessions table.** The cookie holds an expiry time and an HMAC signature. The signing key mixes a server secret with the password, so changing the password signs every device out. A session lasts a year and renews itself while in use.
+- **Guessing the password is slow.** Every login attempt is counted before the password is checked, in a single database statement, so a burst of simultaneous requests can't slip past the limit. Ten wrong passwords from one address block it for up to 15 minutes. IPv6 addresses count by their /64 network, so switching addresses within one connection doesn't help. Fifty wrong passwords across all addresses pause new logins for everyone. Devices that are already signed in keep working.
 - **The TMDB token stays on the server.** The worker calls TMDB and sends the browser only what the page needs.
 - **The episode rules live in one small, tested module**, [`public/js/progress.js`](public/js/progress.js). It covers moving from a season finale to the next season, season numbers missing from TMDB's data, and seasons whose episode count isn't known yet. Before **+1 EP** marks a show as finished, the app also asks TMDB whether new episodes have come out.
 
@@ -74,7 +75,7 @@ A few decisions worth knowing about:
 src/
   worker.js        API routes
   session.js       password check and signed session cookies
-  throttle.js      login throttling per IP address
+  throttle.js      login throttling, per address and overall
   tmdb.js          TMDB search and details
   titles.js        reading and writing the list
 migrations/        D1 schema
