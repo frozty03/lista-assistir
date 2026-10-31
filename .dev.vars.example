@@ -1,0 +1,6 @@
+# Copy to .dev.vars for `npm run dev`. Never commit .dev.vars.
+APP_PASSWORD=uma-senha-para-testar
+# Any long random string, e.g. node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
+SESSION_SECRET=
+# TMDB "API Read Access Token" (starts with eyJ). Needed only for search and adding titles.
+TMDB_TOKEN=

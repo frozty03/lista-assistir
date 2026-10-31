@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Nossa Lista</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#04060c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Nossa Lista">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://image.tmdb.org">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Oxanium:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/app.css">
+  <script type="module" src="/js/app.js"></script>
+</head>
+<body>
+  <div class="sky" aria-hidden="true"></div>
+
+  <main id="login" class="login" hidden>
+    <form id="login-form" class="login-box" novalidate>
+      <p class="eyebrow">Davi &amp; Nico</p>
+      <h1 class="title">Nossa Lista</h1>
+      <div class="saber saber--hero" aria-hidden="true"><span class="hilt"></span><span class="track"><span class="blade"></span></span></div>
+      <input type="text" name="username" value="nossa-lista" autocomplete="username" hidden>
+      <label class="field">
+        <span class="field-label">Senha</span>
+        <input id="password" class="text-input" name="password" type="password" autocomplete="current-password" required>
+      </label>
+      <p id="login-error" class="form-error" role="alert"></p>
+      <button class="btn-primary" type="submit">Entrar</button>
+    </form>
+  </main>
+
+  <div id="app" hidden>
+    <div class="wrap">
+      <header class="top">
+        <p class="eyebrow">Davi &amp; Nico</p>
+        <h1 class="title">Nossa Lista</h1>
+        <nav class="chips" aria-label="Mostrar">
+          <button type="button" class="chip" data-filter="all" aria-pressed="true">Tudo</button>
+          <button type="button" class="chip" data-filter="movie" aria-pressed="false">Filmes</button>
+          <button type="button" class="chip" data-filter="series" aria-pressed="false">Séries</button>
+          <button type="button" class="chip" data-filter="anime" aria-pressed="false">Animes</button>
+        </nav>
+      </header>
+
+      <main id="home">
+        <section id="watching-section" aria-labelledby="watching-title" hidden>
+          <h2 id="watching-title" class="section-title">Assistindo agora</h2>
+          <div id="watching" class="cards"></div>
+        </section>
+
+        <section id="planned-section" aria-labelledby="planned-title" hidden>
+          <h2 id="planned-title" class="section-title">Para assistir</h2>
+          <div id="planned" class="posters"></div>
+        </section>
+
+        <div class="folds">
+        <section id="watched-section" class="fold-section" hidden>
+          <button type="button" class="fold" data-fold="watched" aria-expanded="false" aria-controls="watched">
+            <span class="mini-saber" aria-hidden="true"><span class="hilt"></span><span class="blade"></span></span>
+            <span>Já assistimos · <span data-count></span></span>
+            <span class="chev" aria-hidden="true">›</span>
+          </button>
+          <div id="watched" class="posters fold-body" hidden></div>
+        </section>
+
+        <section id="dropped-section" class="fold-section" hidden>
+          <button type="button" class="fold fold--sith" data-fold="dropped" aria-expanded="false" aria-controls="dropped">
+            <span class="mini-saber" aria-hidden="true"><span class="hilt"></span><span class="blade blade--sith"></span></span>
+            <span>Abandonados · <span data-count></span></span>
+            <span class="chev" aria-hidden="true">›</span>
+          </button>
+          <div id="dropped" class="posters posters--sith fold-body" hidden></div>
+        </section>
+        </div>
+
+        <p id="empty" class="empty" hidden></p>
+      </main>
+
+      <footer class="foot">
+        <p>Busca e imagens do <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a>. Este site usa a API do TMDB, mas não é endossado nem certificado pelo TMDB.</p>
+        <button id="logout" type="button" class="link">Sair</button>
+      </footer>
+    </div>
+
+    <button id="add" type="button" class="fab" aria-label="Adicionar filme, série ou anime">+</button>
+  </div>
+
+  <div id="detail" class="overlay" role="dialog" aria-modal="true" aria-labelledby="detail-title" hidden>
+    <div class="sheet sheet--detail"></div>
+  </div>
+
+  <div id="search" class="overlay" role="dialog" aria-modal="true" aria-label="Adicionar à lista" hidden>
+    <div class="sheet sheet--search">
+      <div class="search-bar">
+        <button type="button" class="round-btn" data-close aria-label="Voltar">‹</button>
+        <div class="search-field">
+          <input id="search-input" class="search-input" type="search" placeholder="Buscar filme, série ou anime" aria-label="Buscar filme, série ou anime" autocomplete="off" autocapitalize="off" enterkeyhint="search" data-autofocus>
+          <button id="search-clear" type="button" class="search-clear" aria-label="Limpar busca" hidden>×</button>
+        </div>
+      </div>
+      <h2 class="section-title" id="results-title">Resultados</h2>
+      <p id="search-status" class="search-status" role="status"></p>
+      <ul id="search-results" class="results" aria-labelledby="results-title"></ul>
+    </div>
+  </div>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+</body>
+</html>

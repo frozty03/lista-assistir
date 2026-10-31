@@ -1,0 +1,16 @@
+{
+  "name": "lista-assistir",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler d1 migrations apply lista-assistir --local && wrangler dev",
+    "test": "node --disable-warning=ExperimentalWarning --test \"test/**/*.test.js\"",
+    "deploy": "wrangler d1 migrations apply lista-assistir --remote && wrangler deploy"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "devDependencies": {
+    "wrangler": "^4.156.0"
+  }
+}
